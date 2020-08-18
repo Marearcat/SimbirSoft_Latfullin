@@ -1,9 +1,14 @@
-﻿
+﻿@model SimbirSoft_Latfullin.ViewModels.Unique.RequestedUri
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<h4>PRIVET</h4>
-
+<form asp-action="Create" asp-controller="Unique" method="post">
+    <div class="form-group">
+        <label asp-for="Value" class="control-label">Uri</label>
+        <input type="text" asp-for="Value" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Отправить" class="btn btn-default" />
+    </div>
+</form>

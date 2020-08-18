@@ -27,7 +27,7 @@ namespace SimbirSoft_Latfullin
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), x => x.MigrationsAssembly("SimbirSoft_Latfullin")));
 
             services.AddControllersWithViews();
             services.AddTransient<Services.Unique.IUniqueService, Services.Unique.UniqueService>();

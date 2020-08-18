@@ -5,92 +5,39 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SimbirSoft_Latfullin.Domain;
+using SimbirSoft_Latfullin.Services.Unique;
+using SimbirSoft_Latfullin.ViewModels.Unique;
 
 namespace SimbirSoft_Latfullin.Controllers
 {
     public class UniqueController : Controller
     {
         private readonly ILogger<UniqueController> _logger;
+        private readonly IUniqueService _uniqueService;
+        private ApplicationContext _context;
 
-        public UniqueController(ILogger<UniqueController> logger)
+        public UniqueController(ILogger<UniqueController> logger, IUniqueService uniqueService, ApplicationContext context)
         {
+            _context = context;
             _logger = logger;
+            _uniqueService = uniqueService;
         }
 
-        // GET: UniqueController
         public ActionResult Index()
         {
-
             return View();
         }
 
-        // GET: UniqueController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: UniqueController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: UniqueController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(RequestedUri uri)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return View(_uniqueService.GetTextFromPage(uri.Value));
         }
 
-        // GET: UniqueController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Details()
         {
             return View();
-        }
-
-        // POST: UniqueController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UniqueController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UniqueController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

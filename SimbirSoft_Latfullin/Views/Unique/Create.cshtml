@@ -1,0 +1,13 @@
+﻿@model SimbirSoft_Latfullin.ViewModels.Unique.UriResult
+@{
+    ViewData["Title"] = "Result";
+}
+
+<a href="Index">Назад</a>
+
+<h4>Uri:</h4> @Model.Uri <br />
+<h4>Text:</h4> 
+@foreach(var word in Model.Result)
+{
+    <p>@word</p><br />
+}
