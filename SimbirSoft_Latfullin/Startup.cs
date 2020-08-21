@@ -53,6 +53,7 @@ namespace SimbirSoft_Latfullin
 
             app.UseAuthorization();
 
+            //Стартовая страница Unique/Index
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

@@ -21,16 +21,34 @@ namespace SimbirSoft_Latfullin.Services.Unique
         {
             _context = context;
         }
-
+        //<summary>
+        //Метод GetTextFromPage
+        //получает URL на входе
+        //и отдаёт весь видимый текст на странице
+        //</summary>
+        //<param name="uri">Аргумент метода GetTextFromPage()</param>
         public UriResult GetTextFromPage(string uri)
         {
             var uriResult = new UriResult { Uri = uri };
+
+            //получение уникальных слов
             var text = GetUniqueWords(uriResult.Uri);
+
+
+            //обновление данных в бд
             uriResult.Result = text.Split(';');
-            UpdateData(uri, text);
+            try
+            {
+                UpdateData(uri, text);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
             return uriResult;
         }
 
+        //Example module
         public List<UriResult> GetExample()
         {
             var results = new List<UriResult>();
