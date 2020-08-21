@@ -1,0 +1,27 @@
+﻿@model List<SimbirSoft_Latfullin.ViewModels.Unique.UriResult>
+@{
+    ViewData["Title"] = "Example";
+}
+
+<a href="Index">Назад</a>
+<br />
+<table border="1">
+    <caption>Пример</caption>
+    <tr>
+        @foreach(var result in Model)
+        {
+            <th>@result.Uri</th>
+        }
+    </tr>
+    <tr>
+        @foreach(var result in Model)
+        {
+         <td style="vertical-align:text-top">
+            @foreach(var word in result.Result)
+            {
+                <p>@word</p>
+            }
+         </td>
+        }
+    </tr>
+</table>

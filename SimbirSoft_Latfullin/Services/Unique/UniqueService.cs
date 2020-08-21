@@ -31,6 +31,15 @@ namespace SimbirSoft_Latfullin.Services.Unique
             return uriResult;
         }
 
+        public List<UriResult> GetExample()
+        {
+            var results = new List<UriResult>();
+            results.Add(GetTextFromPage("https://habr.com/ru/"));
+            results.Add(GetTextFromPage("https://www.simbirsoft.com/"));
+            results.Add(GetTextFromPage("https://docs.microsoft.com/ru-ru/aspnet/core/?view=aspnetcore-3.1"));
+            return results;
+        }
+
         private string GetHtml(string uri)
         {
             string html;

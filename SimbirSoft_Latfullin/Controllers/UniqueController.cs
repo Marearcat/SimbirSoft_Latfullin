@@ -15,11 +15,9 @@ namespace SimbirSoft_Latfullin.Controllers
     {
         private readonly ILogger<UniqueController> _logger;
         private readonly IUniqueService _uniqueService;
-        private ApplicationContext _context;
 
-        public UniqueController(ILogger<UniqueController> logger, IUniqueService uniqueService, ApplicationContext context)
+        public UniqueController(ILogger<UniqueController> logger, IUniqueService uniqueService)
         {
-            _context = context;
             _logger = logger;
             _uniqueService = uniqueService;
         }
@@ -35,9 +33,9 @@ namespace SimbirSoft_Latfullin.Controllers
             return View(_uniqueService.GetTextFromPage(uri.Value));
         }
 
-        public ActionResult Details()
+        public ActionResult Example()
         {
-            return View();
+            return View(_uniqueService.GetExample());
         }
     }
 }

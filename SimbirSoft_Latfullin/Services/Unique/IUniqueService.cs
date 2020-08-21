@@ -9,5 +9,6 @@ namespace SimbirSoft_Latfullin.Services.Unique
     public interface IUniqueService
     {
         public UriResult GetTextFromPage(string uri);
+        public List<UriResult> GetExample();
     }
 }
