@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 using SimbirSoft_Latfullin.Domain;
 using SimbirSoft_Latfullin.Domain.Entities;
 using SimbirSoft_Latfullin.ViewModels.Unique;
@@ -7,19 +8,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace SimbirSoft_Latfullin.Services.Unique
 {
     public class UniqueService : IUniqueService
     {
-        private ApplicationContext _context;
-
-        public UniqueService(ApplicationContext context)
+        private readonly ApplicationContext _context;
+        private readonly ILogger<UniqueService> _logger;
+        public UniqueService(ApplicationContext context, ILogger<UniqueService> logger)
         {
             _context = context;
+            _logger = logger;
         }
         //<summary>
         //Метод GetTextFromPage
@@ -33,17 +32,16 @@ namespace SimbirSoft_Latfullin.Services.Unique
 
             //получение уникальных слов
             var text = GetUniqueWords(uriResult.Uri);
-
+            uriResult.Result = text.Split(';');
 
             //обновление данных в бд
-            uriResult.Result = text.Split(';');
             try
             {
                 UpdateData(uri, text);
             }
             catch(Exception e)
             {
-                Console.WriteLine(e.Message);
+                _logger.LogError(e.Message, uri);
             }
             return uriResult;
         }
@@ -51,10 +49,12 @@ namespace SimbirSoft_Latfullin.Services.Unique
         //Example module
         public List<UriResult> GetExample()
         {
-            var results = new List<UriResult>();
-            results.Add(GetTextFromPage("https://habr.com/ru/"));
-            results.Add(GetTextFromPage("https://www.simbirsoft.com/"));
-            results.Add(GetTextFromPage("https://docs.microsoft.com/ru-ru/aspnet/core/?view=aspnetcore-3.1"));
+            var results = new List<UriResult>
+            {
+                GetTextFromPage("https://habr.com/ru/"),
+                GetTextFromPage("https://www.simbirsoft.com/"),
+                GetTextFromPage("https://docs.microsoft.com/ru-ru/aspnet/core/?view=aspnetcore-3.1")
+            };
             return results;
         }
 
@@ -92,6 +92,7 @@ namespace SimbirSoft_Latfullin.Services.Unique
             }
             catch(Exception e)
             {
+                _logger.LogInformation(e.Message, uri);
                 return e.Message;
             }
 
