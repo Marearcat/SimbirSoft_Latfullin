@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using SimbirSoft_Latfullin.Domain;
 using SimbirSoft_Latfullin.Domain.Entities;
+using SimbirSoft_Latfullin.Domain.Repositories;
 using SimbirSoft_Latfullin.ViewModels.Unique;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,12 @@ namespace SimbirSoft_Latfullin.Services.Unique
 {
     public class UniqueService : IUniqueService
     {
-        private readonly ApplicationContext _context;
         private readonly ILogger<UniqueService> _logger;
+        private readonly UniqueRepository _repository;
         public UniqueService(ApplicationContext context, ILogger<UniqueService> logger)
         {
-            _context = context;
             _logger = logger;
+            _repository = new UniqueRepository(context);
         }
         //<summary>
         //Метод GetTextFromPage
@@ -126,18 +127,16 @@ namespace SimbirSoft_Latfullin.Services.Unique
 
         private async Task UpdateData(string uri, string text)
         {
-            if (_context.UniqueResults.Any(x => x.Uri == uri))
+            if (await _repository.AnyUri(uri))
             {
-                var data = _context.UniqueResults.First(x => x.Uri == uri);
+                var data = await _repository.GetByUri(uri);
                 data.Result = text;
-                _context.UniqueResults.Update(data);
-                await _context.SaveChangesAsync();
+                await _repository.Update(data);
             }
             else
             {
                 var data = new UniqueResult { Result = text, Uri = uri, Id = Guid.NewGuid().ToString() };
-                _context.UniqueResults.Add(data);
-                await _context.SaveChangesAsync();
+                await _repository.Add(data);
             }
         }
     }

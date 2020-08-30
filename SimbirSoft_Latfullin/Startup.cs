@@ -11,6 +11,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using SimbirSoft_Latfullin.Domain;
 using SimbirSoft_Latfullin.Services;
+using SimbirSoft_Latfullin.Domain.Entities;
+using SimbirSoft_Latfullin.Domain.Repositories;
 
 namespace SimbirSoft_Latfullin
 {
@@ -31,6 +33,7 @@ namespace SimbirSoft_Latfullin
 
             services.AddControllersWithViews();
             services.AddTransient<Services.Unique.IUniqueService, Services.Unique.UniqueService>();
+            services.AddTransient<IRepository<UniqueResult>, UniqueRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
