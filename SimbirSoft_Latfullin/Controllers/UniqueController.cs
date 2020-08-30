@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using SimbirSoft_Latfullin.Services.Unique;
 using SimbirSoft_Latfullin.ViewModels.Unique;
+using System.Threading.Tasks;
 
 namespace SimbirSoft_Latfullin.Controllers
 {
@@ -20,14 +21,14 @@ namespace SimbirSoft_Latfullin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(RequestedUri uri)
+        public async Task<ActionResult> Create(RequestedUri uri)
         {
-            return View(_uniqueService.GetTextFromPage(uri.Value));
+            return View(await _uniqueService.GetTextFromPage(uri.Value));
         }
 
-        public ActionResult Example()
+        public async Task<ActionResult> Example()
         {
-            return View(_uniqueService.GetExample());
+            return View(await _uniqueService.GetExample());
         }
     }
 }

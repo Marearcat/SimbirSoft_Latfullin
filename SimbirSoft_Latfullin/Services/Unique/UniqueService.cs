@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace SimbirSoft_Latfullin.Services.Unique
 {
@@ -26,7 +27,7 @@ namespace SimbirSoft_Latfullin.Services.Unique
         //и отдаёт весь видимый текст на странице
         //</summary>
         //<param name="uri">Аргумент метода GetTextFromPage()</param>
-        public UriResult GetTextFromPage(string uri)
+        public async Task<UriResult> GetTextFromPage(string uri)
         {
             var uriResult = new UriResult { Uri = uri };
 
@@ -37,7 +38,7 @@ namespace SimbirSoft_Latfullin.Services.Unique
             //обновление данных в бд
             try
             {
-                UpdateData(uri, text);
+                await UpdateData(uri, text);
             }
             catch(Exception e)
             {
@@ -47,13 +48,13 @@ namespace SimbirSoft_Latfullin.Services.Unique
         }
 
         //Example module
-        public List<UriResult> GetExample()
+        public async Task <List<UriResult>> GetExample()
         {
             var results = new List<UriResult>
             {
-                GetTextFromPage("https://habr.com/ru/"),
-                GetTextFromPage("https://www.simbirsoft.com/"),
-                GetTextFromPage("https://docs.microsoft.com/ru-ru/aspnet/core/?view=aspnetcore-3.1")
+                await GetTextFromPage("https://habr.com/ru/"),
+                await GetTextFromPage("https://www.simbirsoft.com/"),
+                await GetTextFromPage("https://docs.microsoft.com/ru-ru/aspnet/core/?view=aspnetcore-3.1")
             };
             return results;
         }
@@ -103,13 +104,13 @@ namespace SimbirSoft_Latfullin.Services.Unique
             Dictionary<string, int> counter = new Dictionary<string, int>(); 
             foreach(var word in text.Split(' ', ',', '.', '!', '?','"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t'))
             {
-                if (counter.ContainsKey(word))
+                if (counter.ContainsKey(word.ToLower()))
                 {
-                    counter[word]++;
+                    counter[word.ToLower()]++;
                 }
-                else if (word != null && word != "" && word.All(x => Char.IsLetter(x)))
+                else if (word != null && word != "" && word.All(x => Char.IsLetterOrDigit(x)))
                 {
-                    counter.Add(word, 1);
+                    counter.Add(word.ToLower(), 1);
                 }
 
             }
@@ -123,20 +124,20 @@ namespace SimbirSoft_Latfullin.Services.Unique
             return result;
         }
 
-        private void UpdateData(string uri, string text)
+        private async Task UpdateData(string uri, string text)
         {
             if (_context.UniqueResults.Any(x => x.Uri == uri))
             {
                 var data = _context.UniqueResults.First(x => x.Uri == uri);
                 data.Result = text;
                 _context.UniqueResults.Update(data);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             else
             {
                 var data = new UniqueResult { Result = text, Uri = uri, Id = Guid.NewGuid().ToString() };
                 _context.UniqueResults.Add(data);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }
